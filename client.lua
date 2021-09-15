@@ -14,7 +14,6 @@ if id == "" then
     os.setComputerLabel(id)
 end
 
-
 function tojson(obj)
     local t = type(obj)
     if t == "number" or t == "boolean" then
@@ -68,6 +67,5 @@ while true do
         print('> ' .. body)
         print(evalstr)
     end
-
 end
 

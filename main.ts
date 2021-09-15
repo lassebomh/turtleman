@@ -1,6 +1,5 @@
 import { Application, Router } from 'https://deno.land/x/oak@v9.0.0/mod.ts'
 
-
 class Turtle {
     id: string
     online = false;
@@ -20,14 +19,14 @@ class Turtle {
             if (this.online) {
                 // setTimeout(async () => {
                 await this.loop()
-                l()
-                // }, 1500)
+                await l()
+                // }, 1500) 
             }
             await this.onDisconnect()
         }
 
-        await l()
         await this.onConnect()
+        l()
     }
 
     disconnect() {
@@ -58,6 +57,14 @@ class Turtle {
                 resolve(json)
             }
         })
+    }
+
+    nextTo(x: number, y: number, z: number): boolean {
+        const diffX = x - this.x
+        const diffY = y - this.y
+        const diffZ = z - this.z
+
+        return Math.abs(diffX) + Math.abs(diffY) + Math.abs(diffZ) === 1
     }
 
     async forward(): Promise<boolean> {
@@ -111,13 +118,30 @@ class Turtle {
         return success
     }
 
-    async turnTowards(x: number, y: number, _z: number): Promise<boolean> {
-        const diffX = this.x - x
-        const diffY = this.y - y
-        const flatdiffX = this.directionX - diffX/Math.abs(diffX)
-        const flatdiffY = this.directionY - diffY/Math.abs(diffY)
+    async turnTowards(x: number, y: number): Promise<boolean> {
 
-        return await true;
+        let diffX = x - this.x
+        let diffY = y - this.y
+
+        if (this.directionX == -1) {
+            [diffX, diffY] = [-diffX, -diffY]
+        } else if (this.directionY == 1) {
+            [diffX, diffY] = [diffY, -diffX]
+        } else if (this.directionY == -1) {
+            [diffX, diffY] = [-diffY, diffX]
+        }
+
+        if (diffX >= Math.abs(diffY)) {
+            return await true
+        } else if (diffY >= Math.abs(diffX)) {
+            return await this.turnLeft()
+        } else if (-diffY >= Math.abs(diffX)) {
+            return await this.turnRight()
+        } else if (-diffX >= Math.abs(diffY)) {
+            return await this.turnLeft() && await this.turnLeft()
+        }
+        
+        return await true
     }
 
     async placeDown(): Promise<boolean> {
@@ -172,22 +196,18 @@ const turtles: {
 
 class ExampleTurtle extends Turtle  {
     async onConnect() {
-        console.log(this.x, this.y, this.z)
-        console.log(this.directionX, this.directionY)
-        await this.forward()
-        await this.turnRight()
-        await this.forward()
-        console.log(this.x, this.y, this.z)
-        console.log(this.directionX, this.directionY)
+        
     }
 
     onDisconnect() {
     }
 
     async loop() {
-        // await this.turnRight()
-        // await this.forward()
-        // await this.forward()
+        const coordLoop = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+
+        for (let i = 0; i < coordLoop.length; i++) {
+            await this.turnTowards(coordLoop[i][0], coordLoop[i][1])
+        }
     }
 }
 
