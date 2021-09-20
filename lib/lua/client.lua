@@ -54,6 +54,8 @@ while true do
         res.close()
     end
 
+    print(body, body == "")
+
     if body == "" then
         print("Failed to connect")
         retries = retries + 1

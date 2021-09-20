@@ -49,9 +49,21 @@ export class TurtleMan {
             .post('/carry', postPayload)
 
         const app = new Application()
+                
+        app.use(async (context) => {
+            const root = Deno.cwd() + '/lib/static/'
+            try {
+                await context.send({ root })
+            } catch {
+                context.response.status = 404
+                context.response.body = `"${context.request.url}" not found`
+            }
+        })
 
         app.use(router.routes())
         app.use(router.allowedMethods())
+
+        console.log('C:\\Users\\lasse\\Code\\turtleman\\lib\\static\\');
 
         console.log(`Listening on http://${HOST}:${PORT}/`)
 
