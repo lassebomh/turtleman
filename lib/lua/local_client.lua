@@ -1,5 +1,6 @@
 request = require("socket.http")
 ltn12 = require("ltn12")
+workingDir = debug.getinfo(1).short_src:match("(.*/)")
 
 computerLabel = ""
 
@@ -51,4 +52,4 @@ loadstring = function(string)
     end
 end
 
-dofile("client.lua")
+dofile(workingDir .. "client.lua")

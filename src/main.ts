@@ -7,11 +7,10 @@ class ExampleTurtle extends Turtle  {
     }
 }
 
-const HOST = 'localhost'
-const PORT = 8000
-
-const tman = new TurtleMan(HOST, PORT)
+const tman = new TurtleMan()
 
 tman.assign((id: string) => {
-    return new ExampleTurtle(id)
+    return new ExampleTurtle(id, tman)
 })
+
+await tman.start('localhost', 8000)

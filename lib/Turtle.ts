@@ -1,4 +1,3 @@
-import { TurtleStore } from './TurtleStore.ts'
 import { TurtleMan } from './TurtleMan.ts'
 
 export class Turtle {
@@ -155,7 +154,6 @@ export class Turtle {
 
     async placeUp(): Promise<boolean> {
         const success = await <boolean><unknown>this.eval("turtle.placeUp()")
-        // if (success) {}
         return success
     }
 

@@ -1,29 +1,24 @@
-import { Application, Router } from 'https://deno.land/x/oak@v9.0.0/mod.ts'
+import { Application, Router, Response, Request } from 'https://deno.land/x/oak@v9.0.0/mod.ts'
 import { TurtleStore } from './TurtleStore.ts'
 import { Turtle } from './Turtle.ts'
 
 export class TurtleMan {
     turtles: TurtleStore = { }
 
-    host: string
-    port: number
-
-    assignFunc = function(id: string): Turtle {return new Turtle(id)}
-
-    constructor(host: string, port: number) {
-        this.host = host
-        this.port = port
-    }
+    assignFunc = (id: string): Turtle => {return new Turtle(id, this)}
 
     assign(func: (id: string) => Turtle) {
         this.assignFunc = func
     }
 
-    start(): Promise<void> {
+    start(HOST: string, PORT: number): Promise<void> {
 
-        const postPayload = async ({ request, response }: { params: { name: string }; response: any, request: any }) => {
+        const postPayload = async ({ request, response }: { params: { name: string }; response: Response, request: Request }) => {
 
-            const id: string = request.url.searchParams.get("id")
+            const id = request.url.searchParams.get("id")
+            if (id == null) {
+                throw new Error("id is null")
+            }
             
             const bodyRaw = request.body({ type: "json" });
             const body = await bodyRaw.value;
@@ -32,7 +27,7 @@ export class TurtleMan {
                 
                 if (this.turtles[id] === undefined) {
                     this.turtles[id] = {
-                        turtle: this.assignFunc(request.url.searchParams.get("id")),
+                        turtle: this.assignFunc(id),
                         resolveRequest: resolve,
                         resolvePayload: (_resolve: JSON) => {},
                     }
@@ -58,8 +53,8 @@ export class TurtleMan {
         app.use(router.routes())
         app.use(router.allowedMethods())
 
-        console.log(`Listening on http://${this.host}:${this.port}`)
+        console.log(`Listening on http://${HOST}:${PORT}/`)
 
-        return app.listen(`${this.host}:${this.port}`)
+        return app.listen(`${HOST}:${PORT}`)
     }
 }
