@@ -51,7 +51,7 @@ export class TurtleMan {
         const app = new Application()
                 
         app.use(async (context) => {
-            const root = Deno.cwd() + '/lib/static/'
+            const root = Deno.cwd() + '/static/'
             try {
                 await context.send({ root })
             } catch {
@@ -62,8 +62,6 @@ export class TurtleMan {
 
         app.use(router.routes())
         app.use(router.allowedMethods())
-
-        console.log('C:\\Users\\lasse\\Code\\turtleman\\lib\\static\\');
 
         console.log(`Listening on http://${HOST}:${PORT}/`)
 

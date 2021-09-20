@@ -42,7 +42,7 @@
                 return pointLight;
             };
 
-            camera.position.set(0, 20, 50);
+            camera.position.set(0, 200 / 5, 500 / 5);
             controls.update();
 
             scene.background = new THREE.Color(0x1f1f1f);
@@ -55,53 +55,13 @@
             var bluePointLight = addPointLight(scene, 0x0000ff, 0, 0, 200)
 
             var req = await fetch('./data.json');
-            var list = await req.json()
-
-            const cubes = []
-            const lookup = []
-
-            for (let i = 0; i < list.length; i++) {
-                const p = list[i];
-                if (lookup[p[0]] == null) {
-                    lookup[p[0]] = []
-                }
-                if (lookup[p[0]][p[1]] == null) {
-                    lookup[p[0]][p[1]] = []
-                }
-                if (lookup[p[0]][p[1]][p[2]] == null) {
-                    lookup[p[0]][p[1]][p[2]] = true
-                }
-            }
-
-            for (let i = 0; i < list.length; i++) {
-                const p = list[i];
-
-                const diffs = [
-                    [1, 0, 0],
-                    [-1, 0, 0],
-                    [0, 1, 0],
-                    [0, -1, 0],
-                    [0, 0, 1],
-                    [0, 0, -1],
-                ]
-
-                const neighborBools = diffs.map((d) => {
-                    return !(!lookup[p[0] - d[0]] || !lookup[p[0] - d[0]][p[1] - d[1]] || !lookup[p[0] - d[0]][p[1] - d[1]][p[2] - d[2]])
-                })
-
-                if (neighborBools.filter(Boolean).length < 6) {
-                    cubes.push(p);
-                }
-            }
-
-            for (let i = 0; i < cubes.length; i++) {
-            }
+            var cubes = await req.json()
 
             let i = 0
 
             while (i < cubes.length) {
                 const cube = cubes[i];
-                addCube(scene, 1, cube[0], cube[2], cube[1]);
+                addCube(scene, 1, cube[0], cube[2], -cube[1]);
 
                 i++
             }

@@ -1,9 +1,9 @@
 
 type point = [number, number, number]
 
-const list = JSON.parse(Deno.readTextFileSync('./lib/static/suzanne.json'))
+const list = JSON.parse(Deno.readTextFileSync('./static/data.json'))
 
-const listOut: point [] = []
+let listOut: point [] = []
 
 const lookup: boolean [][][] = []
 
@@ -41,4 +41,38 @@ for (let i = 0; i < list.length; i++) {
     }
 }
 
-Deno.writeTextFileSync('./lib/static/suzanne1.json', JSON.stringify(listOut));
+let minX = list[0][0]
+let maxX = list[0][0]
+let minY = list[0][1]
+let maxY = list[0][1]
+let minZ = list[0][2]
+let maxZ = list[0][2]
+
+for (let i = 0; i < list.length; i++) {
+    const p: point = list[i];
+
+    if (p[0] < minX) {
+        minX = p[0]
+    }
+    if (p[0] > maxX) {
+        maxX = p[0]
+    }
+    if (p[1] < minY) {
+        minY = p[0]
+    }
+    if (p[1] > maxY) {
+        maxY = p[0]
+    }
+    if (p[2] < minY) {
+        minY = p[2]
+    }
+    if (p[2] > maxY) {
+        maxY = p[2]
+    }
+}
+
+listOut = listOut.map((e) => {
+    return [e[0] - (minX + maxX)/2, e[1] - (minY + maxY)/2, e[2] - (maxZ - minZ)]
+})
+
+Deno.writeTextFileSync('./static/data.json', JSON.stringify(listOut));
