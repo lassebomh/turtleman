@@ -1,4 +1,5 @@
 import { TurtleStore } from './TurtleStore.ts'
+import { TurtleMan } from './TurtleMan.ts'
 
 export class Turtle {
     id: string
@@ -11,11 +12,11 @@ export class Turtle {
     directionY = 0
     surfaceLevel = 0
 
-    turtles: TurtleStore
+    turtleMan: TurtleMan
 
-    constructor(id: string, turtles: TurtleStore) {
+    constructor(id: string, turtleMan: TurtleMan) {
         this.id = id;
-        this.turtles = turtles;
+        this.turtleMan = turtleMan
     }
 
     async connect() {
@@ -45,7 +46,7 @@ export class Turtle {
 
 
     eval(lua: string): Promise<JSON> {
-        this.turtles[this.id].resolveRequest(lua)
+        this.turtleMan.turtles[this.id].resolveRequest(lua)
 
         return new Promise<JSON>((resolve, reject) => {
             
@@ -54,7 +55,7 @@ export class Turtle {
                 this.disconnect()
             }, 15000);
 
-            this.turtles[this.id].resolvePayload = (json) => {
+            this.turtleMan.turtles[this.id].resolvePayload = (json: JSON) => {
                 clearTimeout(timeout)
                 resolve(json)
             }
