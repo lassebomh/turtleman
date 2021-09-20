@@ -1,7 +1,7 @@
 import { createRequire } from "https://deno.land/std@0.106.0/node/module.ts"
 
 const require = createRequire(import.meta.url)
-const PF = require("../modules/PathFinding3D.js-master/index.js")
+const PF = require("./modules/PathFinding3D.js-master/index.js")
 
 // console.log(PF)
 

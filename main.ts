@@ -1,5 +1,5 @@
-import { Turtle } from '../lib/Turtle.ts'
-import { TurtleMan } from '../lib/TurtleMan.ts'
+import { Turtle } from './lib/Turtle.ts'
+import { TurtleMan } from './lib/TurtleMan.ts'
 
 class ExampleTurtle extends Turtle  {
     async loop() {
