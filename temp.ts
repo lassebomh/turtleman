@@ -1,5 +1,5 @@
 
-const pos = [3, 0]
+const pos = [3, 12]
 
 const goto = [3, 0]
 
@@ -43,20 +43,21 @@ for (let y = height - 1; y >= 0; y--) {
 
 renderstr[pos[1]][pos[0]] = "##"
 
-for (const beenPos of beenTo) {
-    renderstr[beenPos[1]][beenPos[0]] = "##"
-}
-
 for (const blockPos of blocks) {
     renderstr[blockPos[1]][blockPos[0]] = "//"
 }
 
-if (beenTo[beenTo.length - 1][0] == goto[0] && beenTo[beenTo.length - 1][1] == goto[1]) {
-    renderstr[goto[1]][goto[0]] = "ØØ"
-} else {
-    renderstr[goto[1]][goto[0]] = "OO"
-}
+if (beenTo.length) {
+    for (const beenPos of beenTo) {
+        renderstr[beenPos[1]][beenPos[0]] = "##"
+    }
 
+    if (beenTo[beenTo.length - 1][0] == goto[0] && beenTo[beenTo.length - 1][1] == goto[1]) {
+        renderstr[goto[1]][goto[0]] = "ØØ"
+    } else {
+        renderstr[goto[1]][goto[0]] = "OO"
+    }
+}
 
 for (let y = height - 1; y >= 0; y--) {
     let outline = ""
@@ -65,5 +66,3 @@ for (let y = height - 1; y >= 0; y--) {
     }
     console.log(outline)
 }
-
-console.log(beenTo)
