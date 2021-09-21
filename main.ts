@@ -9,6 +9,7 @@ class ExampleTurtle extends Turtle  {
 
 const tman = new TurtleMan()
 
+
 tman.assign((id: string) => {
     return new ExampleTurtle(id, tman)
 })

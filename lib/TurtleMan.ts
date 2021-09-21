@@ -63,7 +63,7 @@ export class TurtleMan {
         app.use(router.routes())
         app.use(router.allowedMethods())
 
-        console.log(`Listening on http://${HOST}:${PORT}/`)
+        console.log(`Listening on port ${PORT}. Viewer on http://${HOST}:${PORT}/index.html`)
 
         return app.listen(`${HOST}:${PORT}`)
     }

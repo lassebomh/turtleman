@@ -8,73 +8,96 @@
         body {
             margin: 0;
         }
+
+        .loader {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 240px;
+            height: 130px;
+            background-color: white;
+            border: 1px solid black;
+            padding: 5px 15px;
+        }
+
+        button {
+            float: right;
+        }
     </style>
 </head>
 
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-    <script>
-        (async () => {
-            const renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
+    <script defer>
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-            var addCube = function (scene, size, x, y, z) {
-                var geometry = new THREE.BoxGeometry(size, size, size),
-                    material = new THREE.MeshStandardMaterial({
-                        color: 0xffffff,
-                        emissive: 0x0f0f0f
-                    });
-                mesh = new THREE.Mesh(geometry, material);
-                mesh.position.set(x, y, z);
-                scene.add(mesh);
-            };
+        var addCube = function (scene, size, x, y, z) {
+            var geometry = new THREE.BoxGeometry(size, size, size),
+                material = new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    emissive: 0x0f0f0f
+                });
+            mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(-x, z, y);
+            scene.add(mesh);
+        };
 
-            var addPointLight = function (scene, color, x, y, z) {
-                var pointLight = new THREE.PointLight(color);
-                pointLight.position.set(x, y, z);
-                scene.add(pointLight);
-                return pointLight;
-            };
+        var addPointLight = function (scene, color, x, y, z) {
+            var pointLight = new THREE.PointLight(color);
+            pointLight.position.set(x, y, z);
+            scene.add(pointLight);
+            return pointLight;
+        };
 
-            camera.position.set(0, 200 / 5, 500 / 5);
+        camera.position.set(100, 50, 120);
+        controls.update();
+
+        scene.background = new THREE.Color(0x1f1f1f);
+        var gridHelper = new THREE.GridHelper(100, 10);
+        scene.add(gridHelper);
+
+        var whitePointLight = addPointLight(scene, 0xffffff, 0, 0, 0)
+        var redPointLight = addPointLight(scene, 0xff0000, 200, 0, 0)
+        var greenPointLight = addPointLight(scene, 0x00ff00, 0, 200, 0)
+        var bluePointLight = addPointLight(scene, 0x0000ff, 0, 0, -200)
+
+
+        function animate() {
             controls.update();
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
 
-            scene.background = new THREE.Color(0x1f1f1f);
-            var gridHelper = new THREE.GridHelper(40, 10);
-            scene.add(gridHelper);
+        animate();
 
-            var whitePointLight = addPointLight(scene, 0xffffff, 0, 0, 0)
-            var redPointLight = addPointLight(scene, 0xff0000, 200, 0, 0)
-            var greenPointLight = addPointLight(scene, 0x00ff00, 0, 200, 0)
-            var bluePointLight = addPointLight(scene, 0x0000ff, 0, 0, 200)
-
-            var req = await fetch('./data.json');
+        async function loadRaster() {
+            var req = await fetch('./' + document.getElementById("json-filename").value + ".json");
             var cubes = await req.json()
 
             let i = 0
 
             while (i < cubes.length) {
                 const cube = cubes[i];
-                addCube(scene, 1, cube[0], cube[2], -cube[1]);
-
+                addCube(scene, 1, cube[0], cube[1], cube[2]);
                 i++
             }
+        }
 
-            function animate() {
-                controls.update();
-                requestAnimationFrame(animate);
-                renderer.render(scene, camera);
-            }
-
-            animate();
-        })()
     </script>
+    <div class="loader">
+        <h1>Load Raster</h1>
+        <div class="textinput">
+            <input id="json-filename" type="text" name="" id="">.json
+            <button onclick="loadRaster()">Load</button>
+        </div>
+    </div>
 </body>
 
 </html>
