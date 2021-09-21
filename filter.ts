@@ -1,5 +1,5 @@
 
-type point = [number, number, number]
+// type point = [number, number, number]
 
 const list = JSON.parse(Deno.readTextFileSync('./static/data.json'))
 
