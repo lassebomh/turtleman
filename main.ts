@@ -1,14 +1,13 @@
 import { Turtle } from './lib/Turtle.ts'
 import { TurtleMan } from './lib/TurtleMan.ts'
 
+const tman = new TurtleMan()
+
 class ExampleTurtle extends Turtle  {
     async loop() {
         await this.turnTowards(0, 1)
     }
 }
-
-const tman = new TurtleMan()
-
 
 tman.assign((id: string) => {
     return new ExampleTurtle(id, tman)
